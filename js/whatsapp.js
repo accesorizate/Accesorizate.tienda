@@ -1,15 +1,349 @@
-import {
-    formatearPrecio
-} from "./ui.js";
+/* =========================================================
+   ACCESORIZATE SPA
+   PEDIDOS POR WHATSAPP
+========================================================= */
 
 
-const numeroWhatsApp =
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+/*
+   IMPORTANTE:
+   Reemplaza los X por el número de WhatsApp de
+   AccesorizateSpA.
+
+   Formato para Chile:
+
+   569XXXXXXXX
+
+   NO colocar:
+   +
+   espacios
+   guiones
+*/
+
+const NUMERO_WHATSAPP =
     "569XXXXXXXX";
 
 
-function enviarPedido(carrito) {
+/* =========================================================
+   FORMATO DE PRECIO
+========================================================= */
 
-    if (carrito.items.length === 0) {
+function formatoPrecioWhatsApp(precio) {
+
+    return Number(precio).toLocaleString(
+        "es-CL",
+        {
+            style: "currency",
+            currency: "CLP",
+            maximumFractionDigits: 0
+        }
+    );
+
+}
+
+
+/* =========================================================
+   NOMBRE DEL ACABADO
+========================================================= */
+
+function nombreAcabadoWhatsApp(
+    acabado
+) {
+
+    switch (acabado) {
+
+        case "normal":
+            return "Normal";
+
+        case "laminada":
+            return "Laminada";
+
+        case "imantada":
+            return "Plastificada imantada";
+
+        default:
+            return acabado || "";
+
+    }
+
+}
+
+
+/* =========================================================
+   CREAR MENSAJE DEL PEDIDO
+========================================================= */
+
+function crearMensajeWhatsApp() {
+
+    if (
+        typeof carrito === "undefined" ||
+        !Array.isArray(carrito)
+    ) {
+
+        return "";
+
+    }
+
+
+    if (
+        carrito.length === 0
+    ) {
+
+        return "";
+
+    }
+
+
+    let mensaje =
+        "¡Hola AccesorizateSpA! 👋\n\n";
+
+
+    mensaje +=
+        "Quiero realizar el siguiente pedido:\n\n";
+
+
+    carrito.forEach(
+        (
+            producto,
+            indice
+        ) => {
+
+            mensaje +=
+                *${indice + 1}. ${producto.nombre}*\n;
+
+
+            mensaje +=
+                Cantidad: ${producto.cantidad}\n;
+
+
+            /*
+                PERSONALIZACIÓN
+            */
+
+            const personalizacion =
+                producto.personalizacion || {};
+
+
+            if (
+                personalizacion.tipoDiseno
+            ) {
+
+                mensaje +=
+                    Diseño: ${personalizacion.tipoDiseno}\n;
+
+            }
+
+
+            if (
+                personalizacion.textoPersonalizado
+            ) {
+
+                mensaje +=
+                    Texto: ${personalizacion.textoPersonalizado}\n;
+
+            }
+
+
+            if (
+                personalizacion.acabado
+            ) {
+
+                mensaje +=
+                    `Acabado: ${nombreAcabadoWhatsApp(
+                        personalizacion.acabado
+                    )}\n`;
+
+            }
+
+
+            if (
+                personalizacion.cantidadPack
+            ) {
+
+                mensaje +=
+                    Pack: ${personalizacion.cantidadPack} unidades\n;
+
+            }
+
+
+            if (
+                personalizacion.observaciones
+            ) {
+
+                mensaje +=
+                    Observaciones: ${personalizacion.observaciones}\n;
+
+            }
+
+
+            /*
+                PRECIO
+            */
+
+            const subtotal =
+                Number(producto.precio) *
+                Number(producto.cantidad);
+
+
+            mensaje +=
+                `Precio unitario: ${formatoPrecioWhatsApp(
+                    producto.precio
+                )}\n`;
+
+
+            mensaje +=
+                `Subtotal: ${formatoPrecioWhatsApp(
+                    subtotal
+                )}\n\n`;
+
+        }
+    );
+
+
+    /*
+        TOTAL
+    */
+
+    const total =
+        typeof obtenerTotalCarrito ===
+        "function"
+
+            ? obtenerTotalCarrito()
+
+            : carrito.reduce(
+                (
+                    suma,
+                    producto
+                ) =>
+                    suma +
+                    (
+                        Number(producto.precio) *
+                        Number(producto.cantidad)
+                    ),
+                0
+            );
+
+
+    mensaje +=
+        "━━━━━━━━━━━━━━━━━━\n";
+
+
+    mensaje +=
+        *TOTAL: ${formatoPrecioWhatsApp(total)}*\n;
+
+
+    mensaje +=
+        "━━━━━━━━━━━━━━━━━━\n\n";
+
+
+    mensaje +=
+        "Quedo atento/a para confirmar los detalles del pedido. 😊";
+
+
+    return mensaje;
+
+}
+
+
+/* =========================================================
+   ABRIR WHATSAPP
+========================================================= */
+
+function realizarPedidoWhatsApp() {
+
+    /*
+        COMPROBAR CARRITO
+    */
+
+    if (
+        typeof carrito === "undefined" ||
+        carrito.length === 0
+    ) {
+
+        alert(
+            "Tu carrito está vacío. Agrega al menos un producto antes de realizar el pedido."
+        );
+
+        return;
+
+    }
+
+
+    /*
+        COMPROBAR NÚMERO
+    */
+
+    if (
+        NUMERO_WHATSAPP.includes("X")
+    ) {
+
+        alert(
+            "Debes configurar primero el número de WhatsApp de AccesorizateSpA en whatsapp.js."
+        );
+
+        return;
+
+    }
+
+
+    /*
+        CREAR MENSAJE
+    */
+
+    const mensaje =
+        crearMensajeWhatsApp();
+
+
+    if (!mensaje) {
+
+        alert(
+            "No se pudo crear el pedido."
+        );
+
+        return;
+
+    }
+
+
+    /*
+        CREAR URL
+    */
+
+    const url =
+        "https://wa.me/" +
+        NUMERO_WHATSAPP +
+        "?text=" +
+        encodeURIComponent(
+            mensaje
+        );
+
+
+    /*
+        ABRIR WHATSAPP
+    */
+
+    window.open(
+        url,
+        "_blank"
+    );
+
+}
+
+
+/* =========================================================
+   COPIAR PEDIDO
+========================================================= */
+
+function copiarPedidoWhatsApp() {
+
+    const mensaje =
+        crearMensajeWhatsApp();
+
+
+    if (!mensaje) {
 
         alert(
             "Tu carrito está vacío."
@@ -20,81 +354,60 @@ function enviarPedido(carrito) {
     }
 
 
-    let mensaje =
-        "Hola Accesorizate SpA 👋\n\n";
+    if (
+        navigator.clipboard
+    ) {
 
-    mensaje +=
-        "Quiero realizar el siguiente pedido:\n\n";
+        navigator.clipboard
+            .writeText(
+                mensaje
+            )
+            .then(
+                function() {
 
+                    alert(
+                        "Pedido copiado correctamente."
+                    );
 
-    carrito.items.forEach(item => {
+                }
+            )
+            .catch(
+                function() {
 
-        const subtotal =
-            item.precio *
-            item.cantidad;
+                    alert(
+                        "No fue posible copiar el pedido."
+                    );
 
+                }
+            );
 
-        mensaje +=
-            🛍️ ${item.nombre}\n;
-
-        mensaje +=
-            Cantidad: ${item.cantidad}\n;
-
-
-        if (item.opciones) {
-
-            if (item.opciones.tipoDiseno) {
-
-                mensaje +=
-                    Diseño: ${item.opciones.tipoDiseno}\n;
-
-            }
-
-
-            if (item.opciones.texto) {
-
-                mensaje +=
-                    Texto: ${item.opciones.texto}\n;
-
-            }
-
-
-            if (item.opciones.observaciones) {
-
-                mensaje +=
-                    Observaciones: ${item.opciones.observaciones}\n;
-
-            }
-
-        }
-
-
-        mensaje +=
-            Subtotal: $${formatearPrecio(subtotal)}\n\n;
-
-    });
-
-
-    mensaje +=
-        💰 TOTAL: $${formatearPrecio(carrito.total())}\n\n;
-
-
-    mensaje +=
-        "Quedo atento/a para confirmar mi pedido. 😊";
-
-
-    const url =
-        https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)};
-
-
-    window.open(
-        url,
-        "_blank"
-    );
+    }
 
 }
 
 
-export {
-    enviarPedido
-};
+/* =========================================================
+   CONFIGURAR BOTÓN DE WHATSAPP
+========================================================= */
+
+function configurarWhatsApp() {
+
+    const boton =
+        document.getElementById(
+            "checkout-button"
+        );
+
+
+    if (!boton) {
+
+        return;
+
+    }
+
+
+    boton.addEventListener(
+        "click",
+        realizarPedidoWhatsApp
+    );
+
+}
