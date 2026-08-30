@@ -1,77 +1,148 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <meta name="description" content="Accesorizate SpA – Impresión Digital. Productos personalizados, fotografías, cuadros, álbumes y papelería.">
+    <meta name="description"
+          content="Accesorizate SpA – Impresión Digital. Productos personalizados, fotografías, cuadros, álbumes y papelería.">
 
-    <meta name="keywords" content="impresión digital, cuadros personalizados, fotos, polaroid, álbumes, papelería, Accesorizate">
-
-    <meta name="author" content="Accesorizate SpA">
+    <meta name="author"
+          content="Accesorizate SpA">
 
     <title>Accesorizate SpA | Impresión Digital</title>
 
     <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
-    <!-- =========================
+
+    <!-- ==========================================
+         BARRA SUPERIOR
+    =========================================== -->
+
+    <div class="top-bar">
+
+        <p>
+            ✨ Productos personalizados e impresión digital
+        </p>
+
+    </div>
+
+
+
+    <!-- ==========================================
          ENCABEZADO
-    ========================== -->
+    =========================================== -->
 
-    <header>
+    <header class="main-header">
 
-        <div class="logo-container">
+        <div class="header-container">
 
-            <img src="images/logo.png"
-                 alt="Accesorizate SpA – Impresión Digital"
-                 class="logo">
 
-        </div>
+            <a href="#inicio" class="logo-link">
 
-        <nav>
+                <img
+                    src="images/logo.png"
+                    alt="Accesorizate SpA"
+                    class="logo"
+                >
 
-            <a href="#inicio">Inicio</a>
+            </a>
 
-            <a href="#productos">Productos</a>
 
-            <a href="#contacto">Contacto</a>
+            <nav class="main-nav">
 
-            <button id="cart-button">
-                🛒 Carrito
-                <span id="cart-count">0</span>
+                <a href="#inicio">
+                    Inicio
+                </a>
+
+                <a href="#productos">
+                    Productos
+                </a>
+
+                <a href="#contacto">
+                    Contacto
+                </a>
+
+            </nav>
+
+
+            <button
+                id="cart-button"
+                class="cart-button"
+                type="button"
+            >
+
+                🛒
+
+                <span>
+                    Carrito
+                </span>
+
+                <strong id="cart-count">
+                    0
+                </strong>
+
             </button>
 
-        </nav>
+
+        </div>
 
     </header>
 
 
-    <!-- =========================
-         INICIO
-    ========================== -->
+
+    <!-- ==========================================
+         CONTENIDO PRINCIPAL
+    =========================================== -->
 
     <main>
 
-        <section id="inicio" class="hero">
+
+        <!-- ======================================
+             HERO
+        ======================================= -->
+
+        <section
+            id="inicio"
+            class="hero"
+        >
 
             <div class="hero-content">
 
-                <h1>
-                    Creamos tus momentos,
-                    <span>los imprimimos para siempre.</span>
-                </h1>
-
-                <p>
-                    Productos personalizados e impresión digital
-                    para convertir tus recuerdos en algo especial.
+                <p class="hero-small-title">
+                    IMPRESIÓN DIGITAL
                 </p>
 
-                <a href="#productos" class="hero-button">
+                <h1>
+                    Tus recuerdos,
+                    <span>hechos para durar.</span>
+                </h1>
+
+                <p class="hero-description">
+
+                    Creamos productos personalizados
+                    para convertir tus momentos favoritos
+                    en recuerdos que puedas conservar.
+
+                </p>
+
+
+                <a
+                    href="#productos"
+                    class="primary-button"
+                >
+
                     Ver productos
+
                 </a>
 
             </div>
@@ -79,59 +150,89 @@
         </section>
 
 
-        <!-- =========================
+
+        <!-- ======================================
              PRODUCTOS
-        ========================== -->
+        ======================================= -->
 
-        <section id="productos" class="products-section">
+        <section
+            id="productos"
+            class="products-section"
+        >
 
-            <div class="section-title">
+            <div class="section-heading">
 
-                <h2>Nuestros productos</h2>
+                <p class="section-label">
+                    DESCUBRE NUESTROS PRODUCTOS
+                </p>
+
+                <h2>
+                    Hecho especialmente para ti
+                </h2>
 
                 <p>
-                    Elige tu producto y personalízalo a tu gusto.
+                    Elige un producto y descubre
+                    todas las opciones disponibles.
                 </p>
 
             </div>
 
-            <div id="products-container" class="products-grid">
 
-                <!-- Los productos serán cargados mediante JavaScript -->
+            <div
+                id="products-container"
+                class="products-grid"
+            >
+
+                <!-- JavaScript cargará los productos -->
 
             </div>
 
         </section>
 
 
-        <!-- =========================
+
+        <!-- ======================================
              CONTACTO
-        ========================== -->
+        ======================================= -->
 
-        <section id="contacto" class="contact-section">
+        <section
+            id="contacto"
+            class="contact-section"
+        >
 
-            <div class="section-title">
+            <div class="section-heading">
 
-                <h2>¿Tienes alguna pregunta?</h2>
+                <p class="section-label">
+                    ESTAMOS PARA AYUDARTE
+                </p>
+
+                <h2>
+                    ¿Tienes alguna pregunta?
+                </h2>
 
                 <p>
-                    Estamos aquí para ayudarte.
+                    Escríbenos y te ayudaremos con tu pedido.
                 </p>
 
             </div>
 
 
-            <div class="contact-container">
+            <div class="contact-grid">
 
-                <a href="#"
-                   class="contact-card"
-                   id="whatsapp-link">
+
+                <a
+                    href="#"
+                    id="whatsapp-link"
+                    class="contact-card"
+                >
 
                     <div class="contact-icon">
                         📱
                     </div>
 
-                    <h3>WhatsApp</h3>
+                    <h3>
+                        WhatsApp
+                    </h3>
 
                     <p>
                         Haz tu pedido o consulta directamente.
@@ -140,15 +241,20 @@
                 </a>
 
 
-                <a href="#"
-                   class="contact-card"
-                   id="instagram-link">
+
+                <a
+                    href="#"
+                    id="instagram-link"
+                    class="contact-card"
+                >
 
                     <div class="contact-icon">
                         📷
                     </div>
 
-                    <h3>Instagram</h3>
+                    <h3>
+                        Instagram
+                    </h3>
 
                     <p>
                         Mira nuestros trabajos y novedades.
@@ -157,42 +263,72 @@
                 </a>
 
 
-                <a href="#"
-                   class="contact-card"
-                   id="tiktok-link">
+
+                <a
+                    href="#"
+                    id="tiktok-link"
+                    class="contact-card"
+                >
 
                     <div class="contact-icon">
                         🎵
                     </div>
 
-                    <h3>TikTok</h3>
+                    <h3>
+                        TikTok
+                    </h3>
 
                     <p>
-                        Síguenos y descubre nuestros productos.
+                        Descubre nuestros productos y novedades.
                     </p>
 
                 </a>
+
 
             </div>
 
         </section>
 
+
     </main>
 
 
-    <!-- =========================
-         CARRITO
-    ========================== -->
 
-    <div id="cart-modal" class="modal">
+    <!-- ==========================================
+         MODAL DEL CARRITO
+    =========================================== -->
 
-        <div class="modal-content">
+    <div
+        id="cart-modal"
+        class="modal"
+    >
 
-            <button id="close-cart" class="close-button">
+        <div class="modal-content cart-modal-content">
+
+
+            <button
+                id="close-cart"
+                class="close-button"
+                type="button"
+            >
+
                 ×
+
             </button>
 
-            <h2>🛒 Tu carrito</h2>
+
+            <div class="modal-header">
+
+                <p class="section-label">
+                    TU PEDIDO
+                </p>
+
+                <h2>
+                    🛒 Tu carrito
+                </h2>
+
+            </div>
+
 
             <div id="cart-items">
 
@@ -202,62 +338,79 @@
 
             </div>
 
-            <div class="cart-total">
 
-                <strong>Total:</strong>
+            <div class="cart-summary">
 
-                <span id="cart-total">
-                    $0
-                </span>
+                <div>
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong id="cart-total">
+                        $0
+                    </strong>
+
+                </div>
+
+
+                <button
+                    id="checkout-button"
+                    class="checkout-button"
+                    type="button"
+                >
+
+                    Continuar por WhatsApp
+
+                </button>
 
             </div>
 
-            <button id="checkout-button" class="checkout-button">
-
-                Realizar pedido por WhatsApp
-
-            </button>
 
         </div>
 
     </div>
 
 
-    <!-- =========================
-         MODAL DE PRODUCTO
-    ========================== -->
 
-    <div id="product-modal" class="modal">
+    <!-- ==========================================
+         MODAL DEL PRODUCTO
+    =========================================== -->
 
-        <div class="product-modal-content">
+    <div
+        id="product-modal"
+        class="modal"
+    >
 
-            <button id="close-product-modal"
-                    class="close-button">
-                ×
-            </button>
+        <div
+            id="product-modal-body"
+            class="modal-content product-modal-content"
+        >
 
-            <div id="product-modal-body">
-
-                <!-- JavaScript cargará aquí el producto -->
-
-            </div>
+            <!-- JavaScript cargará aquí el producto -->
 
         </div>
 
     </div>
 
 
-    <!-- =========================
-         PIE DE PÁGINA
-    ========================== -->
+
+    <!-- ==========================================
+         FOOTER
+    =========================================== -->
 
     <footer>
 
-        <div class="footer-content">
+        <div class="footer-container">
+
 
             <div>
 
-                <h3>Accesorizate SpA</h3>
+                <img
+                    src="images/logo.png"
+                    alt="Accesorizate SpA"
+                    class="footer-logo"
+                >
 
                 <p>
                     Impresión Digital
@@ -268,26 +421,63 @@
 
             <div>
 
-                <p>
-                    © 2026 Accesorizate SpA
-                </p>
+                <h3>
+                    Accesorizate SpA
+                </h3>
 
                 <p>
-                    Todos los derechos reservados.
+                    Creamos recuerdos que duran.
                 </p>
 
             </div>
+
+
+            <div>
+
+                <h3>
+                    Navegación
+                </h3>
+
+                <a href="#inicio">
+                    Inicio
+                </a>
+
+                <a href="#productos">
+                    Productos
+                </a>
+
+                <a href="#contacto">
+                    Contacto
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 Accesorizate SpA
+            </p>
 
         </div>
 
     </footer>
 
 
-    <!-- =========================
-         JAVASCRIPT
-    ========================== -->
 
-    <script src="script.js"></script>
+    <!-- ==========================================
+         JAVASCRIPT
+    =========================================== -->
+
+    <script
+        type="module"
+        src="js/app.js"
+    ></script>
+
 
 </body>
+
 </html>
