@@ -1,14 +1,23 @@
+/* =========================================================
+   ACCESORIZATE SPA
+   CATÁLOGO DE PRODUCTOS
+========================================================= */
+
 const productos = [
 
     {
-        id: "album",
+        id: "album-fotografico",
+
         nombre: "Álbum fotográfico",
-        categoria: "Álbumes",
-        precio: 14990,
-        imagen: "images/album.jpg",
+
+        categoria: "Fotografía",
 
         descripcion:
-            "Álbum personalizado para conservar tus mejores recuerdos.",
+            "Conserva tus mejores recuerdos en un álbum personalizado.",
+
+        precio: 0,
+
+        imagen: "images/album.jpg",
 
         personalizable: true,
 
@@ -22,13 +31,17 @@ const productos = [
 
     {
         id: "polaroid",
-        nombre: "Fotos Polaroid 5 × 8 cm",
-        categoria: "Fotografías",
-        precio: 1990,
-        imagen: "images/polaroid.jpg",
+
+        nombre: "Fotos Polaroid 5x8",
+
+        categoria: "Fotografía",
 
         descripcion:
-            "Tus recuerdos impresos en formato Polaroid.",
+            "Tus recuerdos en formato Polaroid, ideales para regalar, decorar o conservar.",
+
+        precio: 1990,
+
+        imagen: "images/polaroid.jpg",
 
         personalizable: true,
 
@@ -41,28 +54,41 @@ const productos = [
 
 
     {
-        id: "foto-10x15",
-        nombre: "Fotos 10 × 15 cm",
-        categoria: "Fotografías",
-        precio: 1000,
-        imagen: "images/foto-10x15.jpg",
+        id: "fotos-10x15",
+
+        nombre: "Fotos 10x15",
+
+        categoria: "Fotografía",
 
         descripcion:
-            "Impresiones fotográficas en formato 10 × 15 cm.",
+            "Imprime tus fotografías favoritas en formato 10x15 cm.",
 
-        personalizable: false
+        precio: 0,
+
+        imagen: "images/fotos-10x15.jpg",
+
+        personalizable: false,
+
+        opciones: {
+            cantidad: true,
+            observaciones: true
+        }
     },
 
 
     {
         id: "cuadro-21x29",
-        nombre: "Cuadro personalizado 21 × 29 cm",
-        categoria: "Cuadros",
-        precio: 9990,
-        imagen: "images/cuadro-21x29.jpg",
+
+        nombre: "Cuadro personalizado 21x29",
+
+        categoria: "Cuadros personalizados",
 
         descripcion:
-            "Cuadro personalizado ideal para regalar y decorar.",
+            "Transforma tus recuerdos en un cuadro personalizado.",
+
+        precio: 9990,
+
+        imagen: "images/cuadro-21x29.jpg",
 
         personalizable: true,
 
@@ -76,13 +102,17 @@ const productos = [
 
     {
         id: "cuadro-33x48",
-        nombre: "Cuadro personalizado 33 × 48 cm",
-        categoria: "Cuadros",
-        precio: 14990,
-        imagen: "images/cuadro-33x48.jpg",
+
+        nombre: "Cuadro personalizado 33x48",
+
+        categoria: "Cuadros personalizados",
 
         descripcion:
-            "Un formato grande para destacar tus recuerdos.",
+            "Un formato más grande para destacar tus momentos favoritos.",
+
+        precio: 0,
+
+        imagen: "images/cuadro-33x48.jpg",
 
         personalizable: true,
 
@@ -96,60 +126,98 @@ const productos = [
 
     {
         id: "poster-21x29",
-        nombre: "Póster 21 × 29 cm",
+
+        nombre: "Póster 21x29",
+
         categoria: "Pósters",
-        precio: 4990,
-        imagen: "images/poster-21x29.jpg",
 
         descripcion:
             "Póster personalizado para decorar tus espacios.",
 
-        personalizable: true
+        precio: 0,
+
+        imagen: "images/poster-21x29.jpg",
+
+        personalizable: true,
+
+        opciones: {
+            tipoDiseno: true,
+            textoPersonalizado: true,
+            observaciones: true
+        }
     },
 
 
     {
         id: "poster-29x42",
-        nombre: "Póster 29 × 42 cm",
+
+        nombre: "Póster 29x42",
+
         categoria: "Pósters",
-        precio: 7990,
-        imagen: "images/poster-29x42.jpg",
 
         descripcion:
-            "Póster de mayor tamaño para tus diseños.",
+            "Póster de mayor tamaño para darle protagonismo a tus diseños.",
 
-        personalizable: true
+        precio: 0,
+
+        imagen: "images/poster-29x42.jpg",
+
+        personalizable: true,
+
+        opciones: {
+            tipoDiseno: true,
+            textoPersonalizado: true,
+            observaciones: true
+        }
     },
 
 
     {
-        id: "tarjetas",
+        id: "tarjetas-presentacion",
+
         nombre: "Tarjetas de presentación",
-        categoria: "Papelería",
-        precio: 5990,
-        imagen: "images/tarjetas.jpg",
+
+        categoria: "Impresión",
 
         descripcion:
-            "Tarjetas profesionales para representar tu negocio.",
+            "Tarjetas de presentación personalizadas para tu negocio o proyecto.",
 
-        personalizable: true
+        precio: 0,
+
+        imagen: "images/tarjetas-presentacion.jpg",
+
+        personalizable: true,
+
+        opciones: {
+            tipoDiseno: true,
+            textoPersonalizado: true,
+            observaciones: true
+        }
     },
 
 
     {
         id: "stickers",
+
         nombre: "Stickers personalizados",
-        categoria: "Stickers",
-        precio: 3990,
-        imagen: "images/stickers.jpg",
+
+        categoria: "Impresión",
 
         descripcion:
-            "Stickers personalizados para tus proyectos.",
+            "Stickers personalizados para tus productos, emprendimiento o proyectos.",
 
-        personalizable: true
+        precio: 0,
+
+        imagen: "images/stickers.jpg",
+
+        personalizable: true,
+
+        opciones: {
+            cantidad: true,
+            tipoDiseno: true,
+            textoPersonalizado: true,
+            observaciones: true
+        }
     }
 
 ];
-
-
-export { productos };
