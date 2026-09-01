@@ -3,7 +3,7 @@
    CATÁLOGO DE PRODUCTOS
 ========================================================= */
 
-const productos = [
+export const productos = [
 
     {
         id: "album-fotografico",
