@@ -1,16 +1,7 @@
 /* =========================================================
    ACCESORIZATE SPA
-   MODAL DE PRODUCTOS
+   MODAL Y PERSONALIZACIÓN DE PRODUCTOS
 ========================================================= */
-
-
-/* =========================================================
-   IMPORTACIONES
-========================================================= */
-
-import {
-    agregarAlCarrito
-} from "./cart.js";
 
 
 /* =========================================================
@@ -18,71 +9,32 @@ import {
 ========================================================= */
 
 let productoSeleccionado = null;
-
 let cantidadModal = 1;
-
 let precioModal = 0;
 
 
 /* =========================================================
-   ELEMENTOS DEL MODAL
+   ABRIR MODAL DE PRODUCTO
 ========================================================= */
 
-function obtenerModal() {
-
-    return document.getElementById(
-        "product-modal"
-    );
-
-}
-
-
-function obtenerElemento(id) {
-
-    return document.getElementById(id);
-
-}
-
-
-/* =========================================================
-   FORMATO DE PRECIO
-========================================================= */
-
-function formatoPrecioModal(precio) {
-
-    return Number(precio).toLocaleString(
-        "es-CL",
-        {
-            style: "currency",
-            currency: "CLP",
-            maximumFractionDigits: 0
-        }
-    );
-
-}
-
-
-/* =========================================================
-   ABRIR MODAL
-========================================================= */
-
-export function abrirModalProducto(producto) {
+function abrirModalProducto(producto) {
 
     if (!producto) {
-
         return;
-
     }
 
 
     const modal =
-        obtenerModal();
+        document.getElementById("product-modal");
+
+    const cuerpo =
+        document.getElementById("product-modal-body");
 
 
-    if (!modal) {
+    if (!modal || !cuerpo) {
 
         console.error(
-            "No se encontró #product-modal en index.html."
+            "No se encontró el modal del producto."
         );
 
         return;
@@ -93,148 +45,25 @@ export function abrirModalProducto(producto) {
     productoSeleccionado =
         producto;
 
-
     cantidadModal = 1;
-
 
     precioModal =
         Number(producto.precio) || 0;
 
 
-    const imagen =
-        obtenerElemento(
-            "modal-product-image"
-        );
-
-
-    const nombre =
-        obtenerElemento(
-            "modal-product-name"
-        );
-
-
-    const precio =
-        obtenerElemento(
-            "modal-product-price"
-        );
-
-
-    const descripcion =
-        obtenerElemento(
-            "modal-product-description"
-        );
-
-
-    if (imagen) {
-
-        imagen.src =
-            producto.imagen ||
-            "images/logo.png";
-
-        imagen.alt =
-            producto.nombre;
-
-        imagen.onerror =
-            function() {
-
-                this.src =
-                    "images/logo.png";
-
-            };
-
-    }
-
-
-    if (nombre) {
-
-        nombre.textContent =
-            producto.nombre;
-
-    }
-
-
-    if (descripcion) {
-
-        descripcion.textContent =
-            producto.descripcion || "";
-
-    }
-
-
-    generarOpcionesProducto(
+    cuerpo.innerHTML = crearContenidoModal(
         producto
     );
 
 
-    actualizarPrecioModal();
-
-    actualizarCantidadModal();
-
-
-    modal.classList.add(
-        "active"
-    );
-
+    modal.classList.add("active");
 
     document.body.classList.add(
         "modal-open"
     );
 
-}
 
-
-/* =========================================================
-   CERRAR MODAL
-========================================================= */
-
-export function cerrarModalProducto() {
-
-    const modal =
-        obtenerModal();
-
-
-    if (!modal) {
-
-        return;
-
-    }
-
-
-    modal.classList.remove(
-        "active"
-    );
-
-
-    document.body.classList.remove(
-        "modal-open"
-    );
-
-
-    productoSeleccionado =
-        null;
-
-}
-
-
-/* =========================================================
-   ACTUALIZAR CANTIDAD
-========================================================= */
-
-function actualizarCantidadModal() {
-
-    const elemento =
-        obtenerElemento(
-            "modal-quantity"
-        );
-
-
-    if (elemento) {
-
-        elemento.textContent =
-            cantidadModal;
-
-    }
-
+    configurarEventosModal();
 
     actualizarPrecioModal();
 
@@ -242,87 +71,170 @@ function actualizarCantidadModal() {
 
 
 /* =========================================================
-   ACTUALIZAR PRECIO
+   CREAR CONTENIDO DEL MODAL
 ========================================================= */
 
-function actualizarPrecioModal() {
+function crearContenidoModal(producto) {
 
-    const elemento =
-        obtenerElemento(
-            "modal-product-price"
-        );
+    return `
 
-
-    if (!elemento) {
-
-        return;
-
-    }
-
-
-    const total =
-        precioModal *
-        cantidadModal;
+        <button
+            type="button"
+            class="close-button"
+            id="close-product-modal"
+            aria-label="Cerrar producto"
+        >
+            ×
+        </button>
 
 
-    elemento.textContent =
-        formatoPrecioModal(
-            total
-        );
+        <div class="product-detail">
+
+
+            <!-- IMAGEN -->
+
+            <div class="product-detail-image">
+
+                <img
+                    id="modal-product-image"
+                    src="${producto.imagen || "images/logo.png"}"
+                    alt="${producto.nombre}"
+                    onerror="this.src='images/logo.png'"
+                >
+
+            </div>
+
+
+            <!-- INFORMACIÓN -->
+
+            <div class="product-detail-info">
+
+
+                <p class="section-label">
+                    ${producto.categoria || "PRODUCTO"}
+                </p>
+
+
+                <h2 id="modal-product-name">
+                    ${producto.nombre}
+                </h2>
+
+
+                <div
+                    class="product-detail-price"
+                    id="modal-product-price"
+                >
+                    $0
+                </div>
+
+
+                <p
+                    class="product-description"
+                    id="modal-product-description"
+                >
+                    ${producto.descripcion || ""}
+                </p>
+
+
+                <!-- OPCIONES -->
+
+                <div
+                    class="product-options"
+                    id="modal-product-options"
+                >
+                    ${crearOpcionesProducto(producto)}
+                </div>
+
+
+                <!-- CANTIDAD -->
+
+                <div class="quantity-selector">
+
+                    <span>
+                        Cantidad
+                    </span>
+
+
+                    <div class="quantity-controls">
+
+                        <button
+                            type="button"
+                            id="modal-decrease"
+                            aria-label="Disminuir cantidad"
+                        >
+                            −
+                        </button>
+
+
+                        <strong id="modal-quantity">
+                            1
+                        </strong>
+
+
+                        <button
+                            type="button"
+                            id="modal-increase"
+                            aria-label="Aumentar cantidad"
+                        >
+                            +
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- AGREGAR -->
+
+                <button
+                    type="button"
+                    class="add-product-button"
+                    id="modal-add-cart"
+                >
+                    Agregar al carrito
+                </button>
+
+
+            </div>
+
+        </div>
+
+    `;
 
 }
 
 
 /* =========================================================
-   GENERAR OPCIONES DEL PRODUCTO
+   CREAR OPCIONES DEL PRODUCTO
 ========================================================= */
 
-function generarOpcionesProducto(producto) {
+function crearOpcionesProducto(producto) {
 
-    const contenedor =
-        obtenerElemento(
-            "modal-product-options"
-        );
+    const opciones =
+        producto.opciones || {};
 
 
-    if (!contenedor) {
+    /*
+       POLAROID
+    */
 
-        return;
+    if (producto.id === "polaroid") {
+
+        return crearOpcionesPolaroid();
 
     }
 
 
-    contenedor.innerHTML =
-        "";
+    let html = "";
 
 
     /*
-        POLAROID
+       ENCABEZADO
     */
 
-    if (
-        producto.id ===
-        "polaroid"
-    ) {
+    if (producto.personalizable) {
 
-        generarOpcionesPolaroid(
-            contenedor
-        );
-
-        return;
-
-    }
-
-
-    /*
-        PERSONALIZACIÓN
-    */
-
-    if (
-        producto.personalizable
-    ) {
-
-        contenedor.innerHTML += `
+        html += `
 
             <h3>
                 Personaliza tu producto
@@ -334,15 +246,12 @@ function generarOpcionesProducto(producto) {
 
 
     /*
-        TIPO DE DISEÑO
+       TIPO DE DISEÑO
     */
 
-    if (
-        producto.opciones &&
-        producto.opciones.tipoDiseno
-    ) {
+    if (opciones.tipoDiseno) {
 
-        contenedor.innerHTML += `
+        html += `
 
             <label for="tipo-diseno">
                 Tipo de diseño
@@ -398,15 +307,12 @@ function generarOpcionesProducto(producto) {
 
 
     /*
-        TEXTO PERSONALIZADO
+       TEXTO PERSONALIZADO
     */
 
-    if (
-        producto.opciones &&
-        producto.opciones.textoPersonalizado
-    ) {
+    if (opciones.textoPersonalizado) {
 
-        contenedor.innerHTML += `
+        html += `
 
             <label for="texto-personalizado">
                 Texto personalizado
@@ -416,6 +322,7 @@ function generarOpcionesProducto(producto) {
                 type="text"
                 id="texto-personalizado"
                 placeholder="Escribe el texto que deseas"
+                maxlength="200"
             >
 
         `;
@@ -424,15 +331,12 @@ function generarOpcionesProducto(producto) {
 
 
     /*
-        CANTIDAD ESPECÍFICA
+       CANTIDAD / FORMATO
     */
 
-    if (
-        producto.opciones &&
-        producto.opciones.cantidad
-    ) {
+    if (opciones.cantidad) {
 
-        contenedor.innerHTML += `
+        html += `
 
             <label for="cantidad-especifica">
                 Cantidad / formato
@@ -472,15 +376,12 @@ function generarOpcionesProducto(producto) {
 
 
     /*
-        OBSERVACIONES
+       OBSERVACIONES
     */
 
-    if (
-        producto.opciones &&
-        producto.opciones.observaciones
-    ) {
+    if (opciones.observaciones) {
 
-        contenedor.innerHTML += `
+        html += `
 
             <label for="observaciones">
                 Observaciones
@@ -488,12 +389,34 @@ function generarOpcionesProducto(producto) {
 
             <textarea
                 id="observaciones"
+                rows="4"
+                maxlength="500"
                 placeholder="Cuéntanos algún detalle adicional..."
             ></textarea>
 
         `;
 
     }
+
+
+    /*
+       SI NO HAY OPCIONES
+    */
+
+    if (!html) {
+
+        html = `
+
+            <p class="no-options">
+                Este producto no requiere personalización.
+            </p>
+
+        `;
+
+    }
+
+
+    return html;
 
 }
 
@@ -502,11 +425,9 @@ function generarOpcionesProducto(producto) {
    OPCIONES POLAROID
 ========================================================= */
 
-function generarOpcionesPolaroid(
-    contenedor
-) {
+function crearOpcionesPolaroid() {
 
-    contenedor.innerHTML = `
+    return `
 
         <h3>
             Personaliza tus Polaroid
@@ -563,43 +484,271 @@ function generarOpcionesPolaroid(
 
         <textarea
             id="observaciones"
+            rows="4"
+            maxlength="500"
             placeholder="Cuéntanos algún detalle adicional..."
         ></textarea>
 
     `;
 
+}
+
+
+/* =========================================================
+   CONFIGURAR EVENTOS DEL MODAL
+========================================================= */
+
+function configurarEventosModal() {
+
+    const modal =
+        document.getElementById("product-modal");
+
+
+    const cerrar =
+        document.getElementById(
+            "close-product-modal"
+        );
+
+
+    const disminuir =
+        document.getElementById(
+            "modal-decrease"
+        );
+
+
+    const aumentar =
+        document.getElementById(
+            "modal-increase"
+        );
+
+
+    const agregar =
+        document.getElementById(
+            "modal-add-cart"
+        );
+
+
+    /* CERRAR */
+
+    if (cerrar) {
+
+        cerrar.addEventListener(
+            "click",
+            cerrarModalProducto
+        );
+
+    }
+
+
+    /* DISMINUIR */
+
+    if (disminuir) {
+
+        disminuir.addEventListener(
+            "click",
+            () => {
+
+                if (cantidadModal > 1) {
+
+                    cantidadModal--;
+
+                    actualizarCantidadModal();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* AUMENTAR */
+
+    if (aumentar) {
+
+        aumentar.addEventListener(
+            "click",
+            () => {
+
+                cantidadModal++;
+
+                actualizarCantidadModal();
+
+            }
+        );
+
+    }
+
+
+    /* AGREGAR */
+
+    if (agregar) {
+
+        agregar.addEventListener(
+            "click",
+            agregarProductoDesdeModal
+        );
+
+    }
+
+
+    /* CERRAR HACIENDO CLIC FUERA */
+
+    if (modal) {
+
+        modal.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target === modal
+                ) {
+
+                    cerrarModalProducto();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* POLAROID */
 
     const acabado =
-        obtenerElemento(
+        document.getElementById(
             "polaroid-acabado"
         );
 
 
     const pack =
-        obtenerElemento(
+        document.getElementById(
             "polaroid-pack"
         );
 
 
-    if (
-        !acabado ||
-        !pack
-    ) {
+    if (acabado && pack) {
+
+        acabado.addEventListener(
+            "change",
+            () => {
+
+                actualizarOpcionesPolaroid(
+                    acabado.value,
+                    pack
+                );
+
+            }
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CERRAR MODAL
+========================================================= */
+
+function cerrarModalProducto() {
+
+    const modal =
+        document.getElementById(
+            "product-modal"
+        );
+
+
+    if (!modal) {
 
         return;
 
     }
 
 
-    acabado.addEventListener(
-        "change",
-        function() {
+    modal.classList.remove(
+        "active"
+    );
 
-            actualizarOpcionesPolaroid(
-                this.value,
-                pack
-            );
 
+    document.body.classList.remove(
+        "modal-open"
+    );
+
+
+    productoSeleccionado =
+        null;
+
+}
+
+
+/* =========================================================
+   ACTUALIZAR CANTIDAD
+========================================================= */
+
+function actualizarCantidadModal() {
+
+    const elemento =
+        document.getElementById(
+            "modal-quantity"
+        );
+
+
+    if (elemento) {
+
+        elemento.textContent =
+            cantidadModal;
+
+    }
+
+
+    actualizarPrecioModal();
+
+}
+
+
+/* =========================================================
+   ACTUALIZAR PRECIO
+========================================================= */
+
+function actualizarPrecioModal() {
+
+    const elemento =
+        document.getElementById(
+            "modal-product-price"
+        );
+
+
+    if (!elemento) {
+
+        return;
+
+    }
+
+
+    const total =
+        precioModal *
+        cantidadModal;
+
+
+    elemento.textContent =
+        formatoPrecioModal(total);
+
+}
+
+
+/* =========================================================
+   FORMATO DE PRECIO
+========================================================= */
+
+function formatoPrecioModal(precio) {
+
+    return Number(precio).toLocaleString(
+        "es-CL",
+        {
+            style: "currency",
+            currency: "CLP",
+            maximumFractionDigits: 0
         }
     );
 
@@ -607,7 +756,7 @@ function generarOpcionesPolaroid(
 
 
 /* =========================================================
-   PACKS POLAROID
+   OPCIONES DE POLAROID
 ========================================================= */
 
 function actualizarOpcionesPolaroid(
@@ -615,15 +764,12 @@ function actualizarOpcionesPolaroid(
     pack
 ) {
 
-    pack.innerHTML =
-        "";
+    pack.innerHTML = "";
 
 
     if (!acabado) {
 
-        pack.disabled =
-            true;
-
+        pack.disabled = true;
 
         pack.innerHTML = `
 
@@ -632,6 +778,7 @@ function actualizarOpcionesPolaroid(
             </option>
 
         `;
+
 
         precioModal =
             Number(
@@ -646,17 +793,13 @@ function actualizarOpcionesPolaroid(
     }
 
 
-    pack.disabled =
-        false;
+    pack.disabled = false;
 
 
     let opciones = [];
 
 
-    if (
-        acabado ===
-        "normal"
-    ) {
+    if (acabado === "normal") {
 
         opciones = [
 
@@ -685,10 +828,7 @@ function actualizarOpcionesPolaroid(
     }
 
 
-    if (
-        acabado ===
-        "laminada"
-    ) {
+    if (acabado === "laminada") {
 
         opciones = [
 
@@ -712,10 +852,7 @@ function actualizarOpcionesPolaroid(
     }
 
 
-    if (
-        acabado ===
-        "imantada"
-    ) {
+    if (acabado === "imantada") {
 
         opciones = [
 
@@ -739,35 +876,42 @@ function actualizarOpcionesPolaroid(
     }
 
 
-    opciones.forEach(
-        opcion => {
+    pack.innerHTML = `
 
-            const elemento =
-                document.createElement(
-                    "option"
-                );
+        <option value="">
+            Selecciona una cantidad
+        </option>
 
-
-            elemento.value =
-                ${opcion.cantidad}|${opcion.precio};
-
-
-            elemento.textContent =
-                ${opcion.cantidad} unidades — ${formatoPrecioModal(opcion.precio)};
-
-
-            pack.appendChild(
-                elemento
-            );
-
+        ${
+            opciones
+                .map(
+                    opcion => `
+                        <option
+                            value="${opcion.cantidad}|${opcion.precio}"
+                        >
+                            ${opcion.cantidad} unidades —
+                            ${formatoPrecioModal(opcion.precio)}
+                        </option>
+                    `
+                )
+                .join("")
         }
-    );
+
+    `;
 
 
-    pack.onchange =
-        function() {
+    pack.addEventListener(
+        "change",
+        () => {
 
-            if (!this.value) {
+            if (!pack.value) {
+
+                precioModal =
+                    Number(
+                        productoSeleccionado?.precio
+                    ) || 0;
+
+                actualizarPrecioModal();
 
                 return;
 
@@ -775,24 +919,23 @@ function actualizarOpcionesPolaroid(
 
 
             const datos =
-                this.value.split("|");
+                pack.value.split("|");
 
 
             precioModal =
-                Number(
-                    datos[1]
-                );
+                Number(datos[1]) || 0;
 
 
             actualizarPrecioModal();
 
-        };
+        }
+    );
 
 }
 
 
 /* =========================================================
-   RECOPILAR PERSONALIZACIÓN
+   OBTENER PERSONALIZACIÓN
 ========================================================= */
 
 function obtenerPersonalizacionModal() {
@@ -801,31 +944,37 @@ function obtenerPersonalizacionModal() {
 
 
     const tipoDiseno =
-        obtenerElemento(
+        document.getElementById(
             "tipo-diseno"
         );
 
 
     const texto =
-        obtenerElemento(
+        document.getElementById(
             "texto-personalizado"
         );
 
 
+    const cantidad =
+        document.getElementById(
+            "cantidad-especifica"
+        );
+
+
     const observaciones =
-        obtenerElemento(
+        document.getElementById(
             "observaciones"
         );
 
 
     const acabado =
-        obtenerElemento(
+        document.getElementById(
             "polaroid-acabado"
         );
 
 
     const pack =
-        obtenerElemento(
+        document.getElementById(
             "polaroid-pack"
         );
 
@@ -842,6 +991,14 @@ function obtenerPersonalizacionModal() {
 
         personalizacion.textoPersonalizado =
             texto.value.trim();
+
+    }
+
+
+    if (cantidad) {
+
+        personalizacion.cantidad =
+            cantidad.value;
 
     }
 
@@ -869,15 +1026,11 @@ function obtenerPersonalizacionModal() {
 
 
         personalizacion.cantidadPack =
-            Number(
-                datos[0]
-            );
+            Number(datos[0]);
 
 
         personalizacion.precioPack =
-            Number(
-                datos[1]
-            );
+            Number(datos[1]);
 
     }
 
@@ -888,7 +1041,7 @@ function obtenerPersonalizacionModal() {
 
 
 /* =========================================================
-   AGREGAR PRODUCTO AL CARRITO
+   AGREGAR AL CARRITO
 ========================================================= */
 
 function agregarProductoDesdeModal() {
@@ -904,18 +1057,13 @@ function agregarProductoDesdeModal() {
         obtenerPersonalizacionModal();
 
 
-    /*
-        VALIDACIÓN POLAROID
-    */
+    /* VALIDACIÓN POLAROID */
 
     if (
-        productoSeleccionado.id ===
-        "polaroid"
+        productoSeleccionado.id === "polaroid"
     ) {
 
-        if (
-            !personalizacion.acabado
-        ) {
+        if (!personalizacion.acabado) {
 
             alert(
                 "Selecciona un acabado."
@@ -926,9 +1074,7 @@ function agregarProductoDesdeModal() {
         }
 
 
-        if (
-            !personalizacion.cantidadPack
-        ) {
+        if (!personalizacion.cantidadPack) {
 
             alert(
                 "Selecciona una cantidad."
@@ -942,15 +1088,29 @@ function agregarProductoDesdeModal() {
 
 
     /*
-        PRODUCTOS SIN PRECIO
+       VALIDACIÓN DE PRECIO
     */
 
-    if (
-        precioModal <= 0
-    ) {
+    if (precioModal <= 0) {
 
         alert(
-            "Este producto todavía no tiene un precio configurado. Contáctanos para cotizarlo."
+            "Este producto aún no tiene un precio configurado. Escríbenos por WhatsApp para consultar."
+        );
+
+        return;
+
+    }
+
+
+    /* AGREGAR */
+
+    if (
+        typeof agregarAlCarrito !==
+        "function"
+    ) {
+
+        console.error(
+            "La función agregarAlCarrito no está disponible."
         );
 
         return;
@@ -972,9 +1132,6 @@ function agregarProductoDesdeModal() {
         cantidad:
             cantidadModal,
 
-        imagen:
-            productoSeleccionado.imagen,
-
         personalizacion:
             personalizacion
 
@@ -982,148 +1139,5 @@ function agregarProductoDesdeModal() {
 
 
     cerrarModalProducto();
-
-}
-
-
-/* =========================================================
-   CONFIGURAR EVENTOS
-========================================================= */
-
-export function inicializarModalProducto() {
-
-    const modal =
-        obtenerModal();
-
-
-    if (!modal) {
-
-        console.error(
-            "No existe #product-modal."
-        );
-
-        return;
-
-    }
-
-
-    const cerrar =
-        obtenerElemento(
-            "close-product-modal"
-        );
-
-
-    const disminuir =
-        obtenerElemento(
-            "modal-decrease"
-        );
-
-
-    const aumentar =
-        obtenerElemento(
-            "modal-increase"
-        );
-
-
-    const agregar =
-        obtenerElemento(
-            "modal-add-cart"
-        );
-
-
-    if (cerrar) {
-
-        cerrar.addEventListener(
-            "click",
-            cerrarModalProducto
-        );
-
-    }
-
-
-    if (disminuir) {
-
-        disminuir.addEventListener(
-            "click",
-            function() {
-
-                if (
-                    cantidadModal > 1
-                ) {
-
-                    cantidadModal--;
-
-                    actualizarCantidadModal();
-
-                }
-
-            }
-        );
-
-    }
-
-
-    if (aumentar) {
-
-        aumentar.addEventListener(
-            "click",
-            function() {
-
-                cantidadModal++;
-
-                actualizarCantidadModal();
-
-            }
-
-        );
-
-    }
-
-
-    if (agregar) {
-
-        agregar.addEventListener(
-            "click",
-            agregarProductoDesdeModal
-        );
-
-    }
-
-
-    modal.addEventListener(
-        "click",
-        function(event) {
-
-            if (
-                event.target ===
-                modal
-            ) {
-
-                cerrarModalProducto();
-
-            }
-
-        }
-    );
-
-
-    document.addEventListener(
-        "keydown",
-        function(event) {
-
-            if (
-                event.key ===
-                "Escape" &&
-                modal.classList.contains(
-                    "active"
-                )
-            ) {
-
-                cerrarModalProducto();
-
-            }
-
-        }
-    );
 
 }
