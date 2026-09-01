@@ -1,489 +1,92 @@
-import { productos } from "./products.js";
+/* =========================================================
+   ACCESORIZATE SPA
+   ARCHIVO PRINCIPAL
+========================================================= */
 
-import { Carrito } from "./cart.js";
 
-import {
-    formatearPrecio,
-    abrirModal,
-    cerrarModal
-} from "./ui.js";
+/* =========================================================
+   INICIALIZACIÓN
+========================================================= */
 
-import {
-    mostrarProducto
-} from "./product-modal.js";
+document.addEventListener("DOMContentLoaded", () => {
 
-import {
-    enviarPedido
-} from "./whatsapp.js";
+    console.log("Accesorizate SpA iniciado correctamente.");
 
 
+    /* ================================================
+       CARGAR CARRITO
+    ================================================ */
 
-const carrito =
-    new Carrito();
+    if (typeof cargarCarrito === "function") {
 
+        cargarCarrito();
 
+    }
 
-const productsContainer =
-    document.getElementById(
-        "products-container"
-    );
 
+    /* ================================================
+       MOSTRAR PRODUCTOS Y CONFIGURAR INTERFAZ
+    ================================================ */
 
-const cartButton =
-    document.getElementById(
-        "cart-button"
-    );
+    if (typeof inicializarUI === "function") {
 
+        inicializarUI();
 
-const cartModal =
-    document.getElementById(
-        "cart-modal"
-    );
+    }
 
 
-const closeCart =
-    document.getElementById(
-        "close-cart"
-    );
+    /* ================================================
+       ACTUALIZAR CARRITO
+    ================================================ */
 
+    if (typeof actualizarCarrito === "function") {
 
-const cartItems =
-    document.getElementById(
-        "cart-items"
-    );
+        actualizarCarrito();
 
+    }
 
-const cartTotal =
-    document.getElementById(
-        "cart-total"
-    );
 
+    /* ================================================
+       ACTUALIZAR CONTADOR
+    ================================================ */
 
-const cartCount =
-    document.getElementById(
-        "cart-count"
-    );
+    if (typeof actualizarContadorCarrito === "function") {
 
+        actualizarContadorCarrito();
 
-const checkoutButton =
-    document.getElementById(
-        "checkout-button"
-    );
+    }
 
 
+    /* ================================================
+       CONFIGURAR BOTÓN DEL CARRITO
+    ================================================ */
 
-/* ==========================================
-   MOSTRAR PRODUCTOS
-========================================== */
+    const cartButton =
+        document.getElementById("cart-button");
 
 
-function mostrarProductos() {
+    if (cartButton) {
 
-    productsContainer.innerHTML = "";
+        cartButton.addEventListener(
+            "click",
+            () => {
 
+                if (
+                    typeof abrirCarrito === "function"
+                ) {
 
-    productos.forEach(producto => {
-
-
-        const card =
-            document.createElement(
-                "article"
-            );
-
-
-        card.className =
-            "product-card";
-
-
-        card.innerHTML = `
-
-            <div class="product-card-image">
-
-                <img
-                    src="${producto.imagen}"
-                    alt="${producto.nombre}"
-                    onerror="this.src='images/logo.png'"
-                >
-
-            </div>
-
-
-            <div class="product-card-content">
-
-                <p class="product-category">
-
-                    ${producto.categoria}
-
-                </p>
-
-
-                <h3>
-
-                    ${producto.nombre}
-
-                </h3>
-
-
-                <p>
-
-                    ${producto.descripcion}
-
-                </p>
-
-
-                <div class="product-card-bottom">
-
-                    <strong>
-
-                        $${formatearPrecio(producto.precio)}
-
-                    </strong>
-
-
-                    <button
-                        class="view-product"
-                        data-id="${producto.id}"
-                        type="button"
-                    >
-
-                        Ver producto
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        `;
-
-
-        productsContainer.appendChild(card);
-
-    });
-
-
-    document
-        .querySelectorAll(".view-product")
-        .forEach(button => {
-
-
-            button.addEventListener(
-                "click",
-                () => {
-
-
-                    const producto =
-                        productos.find(
-
-                            item =>
-                                item.id ===
-                                button.dataset.id
-
-                        );
-
-
-                    if (producto) {
-
-                        mostrarProducto(
-                            producto
-                        );
-
-                    }
+                    abrirCarrito();
 
                 }
-            );
 
-        });
-
-}
-
-
-
-/* ==========================================
-   ACTUALIZAR CARRITO
-========================================== */
-
-
-function actualizarCarrito() {
-
-    cartItems.innerHTML = "";
-
-
-    cartCount.textContent =
-        carrito.cantidadTotal();
-
-
-    cartTotal.textContent =
-        $${formatearPrecio(carrito.total())};
-
-
-    if (carrito.items.length === 0) {
-
-        cartItems.innerHTML = `
-
-            <div class="empty-cart">
-
-                <p>
-                    Tu carrito está vacío.
-                </p>
-
-                <a href="#productos">
-                    Ver productos
-                </a>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    carrito.items.forEach(
-        (item, index) => {
-
-
-            const elemento =
-                document.createElement(
-                    "div"
-                );
-
-
-            elemento.className =
-                "cart-item";
-
-
-            elemento.innerHTML = `
-
-                <div>
-
-                    <h3>
-                        ${item.nombre}
-                    </h3>
-
-                    <p>
-                        $${formatearPrecio(item.precio)}
-                    </p>
-
-                </div>
-
-
-                <div class="cart-item-controls">
-
-                    <button
-                        data-action="decrease"
-                        data-index="${index}"
-                    >
-                        −
-                    </button>
-
-
-                    <strong>
-                        ${item.cantidad}
-                    </strong>
-
-
-                    <button
-                        data-action="increase"
-                        data-index="${index}"
-                    >
-                        +
-                    </button>
-
-
-                    <button
-                        data-action="remove"
-                        data-index="${index}"
-                    >
-                        Eliminar
-                    </button>
-
-                </div>
-
-            `;
-
-
-            cartItems.appendChild(
-                elemento
-            );
-
-        }
-    );
-
-}
-
-
-
-/* ==========================================
-   EVENTOS DEL CARRITO
-========================================== */
-
-
-cartButton.addEventListener(
-    "click",
-    () => {
-
-        actualizarCarrito();
-
-        abrirModal(cartModal);
-
-    }
-);
-
-
-closeCart.addEventListener(
-    "click",
-    () => {
-
-        cerrarModal(cartModal);
-
-    }
-);
-
-
-cartModal.addEventListener(
-    "click",
-    event => {
-
-        if (
-            event.target ===
-            cartModal
-        ) {
-
-            cerrarModal(
-                cartModal
-            );
-
-        }
-
-    }
-);
-
-
-
-cartItems.addEventListener(
-    "click",
-    event => {
-
-
-        const button =
-            event.target.closest(
-                "button"
-            );
-
-
-        if (!button) return;
-
-
-        const index =
-            Number(
-                button.dataset.index
-            );
-
-
-        const action =
-            button.dataset.action;
-
-
-        if (
-            action ===
-            "increase"
-        ) {
-
-            carrito.aumentar(
-                index
-            );
-
-        }
-
-
-        if (
-            action ===
-            "decrease"
-        ) {
-
-            carrito.disminuir(
-                index
-            );
-
-        }
-
-
-        if (
-            action ===
-            "remove"
-        ) {
-
-            carrito.eliminar(
-                index
-            );
-
-        }
-
-
-        actualizarCarrito();
-
-    }
-);
-
-
-
-/* ==========================================
-   WHATSAPP
-========================================== */
-
-
-checkoutButton.addEventListener(
-    "click",
-    () => {
-
-        enviarPedido(
-            carrito
+            }
         );
 
     }
-);
 
 
+    console.log(
+        "Interfaz de Accesorizate SpA lista."
+    );
 
-/* ==========================================
-   CERRAR MODAL PRODUCTO
-========================================== */
-
-
-document.addEventListener(
-    "click",
-    event => {
-
-
-        if (
-            event.target.id ===
-            "close-product-modal"
-        ) {
-
-            const modal =
-                document.getElementById(
-                    "product-modal"
-                );
-
-
-            cerrarModal(
-                modal
-            );
-
-        }
-
-    }
-);
-
-
-
-/* ==========================================
-   INICIALIZAR
-========================================== */
-
-
-mostrarProductos();
-
-actualizarCarrito();
+});
