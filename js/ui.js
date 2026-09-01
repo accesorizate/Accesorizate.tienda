@@ -5,16 +5,33 @@
 
 
 /* =========================================================
+   IMPORTACIONES
+========================================================= */
+
+import {
+    productos
+} from "./products.js";
+
+
+import {
+    abrirModalProducto
+} from "./product-modal.js";
+
+
+/* =========================================================
    FORMATO DE PRECIOS
 ========================================================= */
 
-function formatoPrecio(precio) {
+export function formatoPrecio(precio) {
 
-    return Number(precio).toLocaleString("es-CL", {
-        style: "currency",
-        currency: "CLP",
-        maximumFractionDigits: 0
-    });
+    return Number(precio).toLocaleString(
+        "es-CL",
+        {
+            style: "currency",
+            currency: "CLP",
+            maximumFractionDigits: 0
+        }
+    );
 
 }
 
@@ -23,7 +40,7 @@ function formatoPrecio(precio) {
    CREAR TARJETA DE PRODUCTO
 ========================================================= */
 
-function crearTarjetaProducto(producto) {
+export function crearTarjetaProducto(producto) {
 
     const precioTexto =
         producto.precio > 0
@@ -32,7 +49,11 @@ function crearTarjetaProducto(producto) {
 
 
     return `
-        <article class="product-card">
+
+        <article
+            class="product-card"
+            data-product-id="${producto.id}"
+        >
 
             <div class="product-card-image">
 
@@ -75,7 +96,9 @@ function crearTarjetaProducto(producto) {
                         class="view-product"
                         data-product-id="${producto.id}"
                     >
+
                         Ver producto
+
                     </button>
 
                 </div>
@@ -83,6 +106,7 @@ function crearTarjetaProducto(producto) {
             </div>
 
         </article>
+
     `;
 
 }
@@ -92,10 +116,12 @@ function crearTarjetaProducto(producto) {
    MOSTRAR PRODUCTOS
 ========================================================= */
 
-function mostrarProductos() {
+export function mostrarProductos() {
 
     const contenedor =
-        document.getElementById("products-container");
+        document.getElementById(
+            "products-container"
+        );
 
 
     if (!contenedor) {
@@ -110,7 +136,6 @@ function mostrarProductos() {
 
 
     if (
-        typeof productos === "undefined" ||
         !Array.isArray(productos)
     ) {
 
@@ -123,12 +148,19 @@ function mostrarProductos() {
     }
 
 
-    if (productos.length === 0) {
+    if (
+        productos.length === 0
+    ) {
 
         contenedor.innerHTML = `
+
             <p class="empty-products">
-                Próximamente tendremos productos disponibles.
+
+                Próximamente tendremos
+                productos disponibles.
+
             </p>
+
         `;
 
         return;
@@ -138,7 +170,9 @@ function mostrarProductos() {
 
     contenedor.innerHTML =
         productos
-            .map(crearTarjetaProducto)
+            .map(
+                crearTarjetaProducto
+            )
             .join("");
 
 }
@@ -148,20 +182,11 @@ function mostrarProductos() {
    OBTENER PRODUCTO POR ID
 ========================================================= */
 
-function obtenerProductoPorId(id) {
-
-    if (
-        typeof productos === "undefined" ||
-        !Array.isArray(productos)
-    ) {
-
-        return null;
-
-    }
-
+export function obtenerProductoPorId(id) {
 
     return productos.find(
-        producto => producto.id === id
+        producto =>
+            producto.id === id
     ) || null;
 
 }
@@ -171,10 +196,12 @@ function obtenerProductoPorId(id) {
    EVENTOS DE LOS PRODUCTOS
 ========================================================= */
 
-function configurarEventosProductos() {
+export function configurarEventosProductos() {
 
     const contenedor =
-        document.getElementById("products-container");
+        document.getElementById(
+            "products-container"
+        );
 
 
     if (!contenedor) {
@@ -184,12 +211,22 @@ function configurarEventosProductos() {
     }
 
 
+    /*
+        Event delegation:
+
+        En lugar de crear un evento para
+        cada botón, escuchamos los clics
+        desde el contenedor principal.
+    */
+
     contenedor.addEventListener(
         "click",
         function(event) {
 
             const boton =
-                event.target.closest(".view-product");
+                event.target.closest(
+                    ".view-product"
+                );
 
 
             if (!boton) {
@@ -204,7 +241,9 @@ function configurarEventosProductos() {
 
 
             const producto =
-                obtenerProductoPorId(productId);
+                obtenerProductoPorId(
+                    productId
+                );
 
 
             if (!producto) {
@@ -219,28 +258,9 @@ function configurarEventosProductos() {
             }
 
 
-            /*
-
-                El archivo product-modal.js
-                será el encargado de abrir
-                la ventana del producto.
-
-            */
-
-            if (
-                typeof abrirModalProducto ===
-                "function"
-            ) {
-
-                abrirModalProducto(producto);
-
-            } else {
-
-                console.warn(
-                    "La función abrirModalProducto todavía no está disponible."
-                );
-
-            }
+            abrirModalProducto(
+                producto
+            );
 
         }
     );
@@ -252,7 +272,7 @@ function configurarEventosProductos() {
    NAVEGACIÓN SUAVE
 ========================================================= */
 
-function configurarNavegacion() {
+export function configurarNavegacion() {
 
     const enlaces =
         document.querySelectorAll(
@@ -260,49 +280,55 @@ function configurarNavegacion() {
         );
 
 
-    enlaces.forEach(enlace => {
+    enlaces.forEach(
+        enlace => {
 
-        enlace.addEventListener(
-            "click",
-            function(event) {
+            enlace.addEventListener(
+                "click",
+                function(event) {
 
-                const destino =
-                    this.getAttribute("href");
+                    const destino =
+                        this.getAttribute(
+                            "href"
+                        );
 
 
-                if (
-                    !destino ||
-                    destino === "#"
-                ) {
+                    if (
+                        !destino ||
+                        destino === "#"
+                    ) {
 
-                    return;
+                        return;
+
+                    }
+
+
+                    const elemento =
+                        document.querySelector(
+                            destino
+                        );
+
+
+                    if (!elemento) {
+
+                        return;
+
+                    }
+
+
+                    event.preventDefault();
+
+
+                    elemento.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
 
                 }
+            );
 
-
-                const elemento =
-                    document.querySelector(destino);
-
-
-                if (!elemento) {
-
-                    return;
-
-                }
-
-
-                event.preventDefault();
-
-
-                elemento.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-
-            }
-        );
-
-    });
+        }
+    );
 
 }
 
@@ -311,7 +337,7 @@ function configurarNavegacion() {
    INICIALIZACIÓN DE LA INTERFAZ
 ========================================================= */
 
-function inicializarUI() {
+export function inicializarUI() {
 
     mostrarProductos();
 
