@@ -5,33 +5,16 @@
 
 
 /* =========================================================
-   IMPORTACIONES
-========================================================= */
-
-import {
-    productos
-} from "./products.js";
-
-
-import {
-    abrirModalProducto
-} from "./product-modal.js";
-
-
-/* =========================================================
    FORMATO DE PRECIOS
 ========================================================= */
 
-export function formatoPrecio(precio) {
+function formatoPrecio(precio) {
 
-    return Number(precio).toLocaleString(
-        "es-CL",
-        {
-            style: "currency",
-            currency: "CLP",
-            maximumFractionDigits: 0
-        }
-    );
+    return Number(precio).toLocaleString("es-CL", {
+        style: "currency",
+        currency: "CLP",
+        maximumFractionDigits: 0
+    });
 
 }
 
@@ -40,16 +23,15 @@ export function formatoPrecio(precio) {
    CREAR TARJETA DE PRODUCTO
 ========================================================= */
 
-export function crearTarjetaProducto(producto) {
+function crearTarjetaProducto(producto) {
 
     const precioTexto =
-        producto.precio > 0
+        Number(producto.precio) > 0
             ? Desde ${formatoPrecio(producto.precio)}
             : "Consultar precio";
 
 
     return `
-
         <article
             class="product-card"
             data-product-id="${producto.id}"
@@ -96,9 +78,7 @@ export function crearTarjetaProducto(producto) {
                         class="view-product"
                         data-product-id="${producto.id}"
                     >
-
                         Ver producto
-
                     </button>
 
                 </div>
@@ -106,7 +86,6 @@ export function crearTarjetaProducto(producto) {
             </div>
 
         </article>
-
     `;
 
 }
@@ -116,12 +95,10 @@ export function crearTarjetaProducto(producto) {
    MOSTRAR PRODUCTOS
 ========================================================= */
 
-export function mostrarProductos() {
+function mostrarProductos() {
 
     const contenedor =
-        document.getElementById(
-            "products-container"
-        );
+        document.getElementById("products-container");
 
 
     if (!contenedor) {
@@ -136,6 +113,7 @@ export function mostrarProductos() {
 
 
     if (
+        typeof productos === "undefined" ||
         !Array.isArray(productos)
     ) {
 
@@ -143,24 +121,23 @@ export function mostrarProductos() {
             "El catálogo de productos no está disponible."
         );
 
+        contenedor.innerHTML = `
+            <p class="empty-products">
+                No se pudieron cargar los productos.
+            </p>
+        `;
+
         return;
 
     }
 
 
-    if (
-        productos.length === 0
-    ) {
+    if (productos.length === 0) {
 
         contenedor.innerHTML = `
-
             <p class="empty-products">
-
-                Próximamente tendremos
-                productos disponibles.
-
+                Próximamente tendremos productos disponibles.
             </p>
-
         `;
 
         return;
@@ -170,9 +147,7 @@ export function mostrarProductos() {
 
     contenedor.innerHTML =
         productos
-            .map(
-                crearTarjetaProducto
-            )
+            .map(crearTarjetaProducto)
             .join("");
 
 }
@@ -182,11 +157,20 @@ export function mostrarProductos() {
    OBTENER PRODUCTO POR ID
 ========================================================= */
 
-export function obtenerProductoPorId(id) {
+function obtenerProductoPorId(id) {
+
+    if (
+        typeof productos === "undefined" ||
+        !Array.isArray(productos)
+    ) {
+
+        return null;
+
+    }
+
 
     return productos.find(
-        producto =>
-            producto.id === id
+        producto => producto.id === id
     ) || null;
 
 }
@@ -196,12 +180,10 @@ export function obtenerProductoPorId(id) {
    EVENTOS DE LOS PRODUCTOS
 ========================================================= */
 
-export function configurarEventosProductos() {
+function configurarEventosProductos() {
 
     const contenedor =
-        document.getElementById(
-            "products-container"
-        );
+        document.getElementById("products-container");
 
 
     if (!contenedor) {
@@ -212,11 +194,9 @@ export function configurarEventosProductos() {
 
 
     /*
-        Event delegation:
-
-        En lugar de crear un evento para
-        cada botón, escuchamos los clics
-        desde el contenedor principal.
+       Usamos un solo evento sobre el contenedor.
+       Esto permite que funcione aunque las tarjetas
+       sean creadas posteriormente mediante JavaScript.
     */
 
     contenedor.addEventListener(
@@ -224,9 +204,7 @@ export function configurarEventosProductos() {
         function(event) {
 
             const boton =
-                event.target.closest(
-                    ".view-product"
-                );
+                event.target.closest(".view-product");
 
 
             if (!boton) {
@@ -241,9 +219,7 @@ export function configurarEventosProductos() {
 
 
             const producto =
-                obtenerProductoPorId(
-                    productId
-                );
+                obtenerProductoPorId(productId);
 
 
             if (!producto) {
@@ -258,9 +234,25 @@ export function configurarEventosProductos() {
             }
 
 
-            abrirModalProducto(
-                producto
-            );
+            /*
+                product-modal.js se encarga
+                de mostrar el producto.
+            */
+
+            if (
+                typeof abrirModalProducto ===
+                "function"
+            ) {
+
+                abrirModalProducto(producto);
+
+            } else {
+
+                console.error(
+                    "La función abrirModalProducto no está disponible."
+                );
+
+            }
 
         }
     );
@@ -272,7 +264,7 @@ export function configurarEventosProductos() {
    NAVEGACIÓN SUAVE
 ========================================================= */
 
-export function configurarNavegacion() {
+function configurarNavegacion() {
 
     const enlaces =
         document.querySelectorAll(
@@ -288,10 +280,13 @@ export function configurarNavegacion() {
                 function(event) {
 
                     const destino =
-                        this.getAttribute(
-                            "href"
-                        );
+                        this.getAttribute("href");
 
+
+                    /*
+                        Los enlaces con href="#"
+                        no tienen destino real.
+                    */
 
                     if (
                         !destino ||
@@ -337,7 +332,7 @@ export function configurarNavegacion() {
    INICIALIZACIÓN DE LA INTERFAZ
 ========================================================= */
 
-export function inicializarUI() {
+function inicializarUI() {
 
     mostrarProductos();
 
